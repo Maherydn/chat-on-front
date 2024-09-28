@@ -1,9 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from "axios";
+import { conversationApi } from "./authServices";
 
-// Créer une instance d'Axios pour l'API des conversations
-const conversationApi = axios.create({
-    baseURL: 'http://localhost:8000/user/message',
-});
 
 export interface Sender {
     id: number
@@ -12,13 +9,13 @@ export interface Sender {
 export interface Message {  
     content: string;
     conversationId: number | undefined ;
-    sender: Sender
+    sender: Sender | undefined
 }
 
 // Fonction pour lire les conversations
 export const sendMessage = async (message: Message): Promise<Message[]> => {
     try {
-        const res: AxiosResponse<Message[]> = await conversationApi.post('/create', message);
+        const res: AxiosResponse<Message[]> = await conversationApi.post('/message/create', message);
         return res.data;
     } catch (error) {
         console.error('Erreur lors de la récupération des conversations:', error);

@@ -1,4 +1,4 @@
-import { Chat } from "../components/Chat.tsx/Chat"
+import { Chat } from "../components/chat/Chat"
 import { Conversation } from "../components/conversation/Conversation"
 import { SideBar } from "../components/sidebar/SideBar"
 

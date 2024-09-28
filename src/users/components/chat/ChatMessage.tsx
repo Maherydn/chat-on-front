@@ -1,7 +1,7 @@
 import React from 'react'
 
 interface ChatMessageProps {
-  currentUserId: number;
+  currentUserId: number | undefined;
   senderId: number;
   content: string;
   initial: string

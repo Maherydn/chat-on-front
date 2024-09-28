@@ -1,11 +1,9 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from "axios";
+import { conversationApi } from "./authServices";
 
-// Créer une instance d'Axios pour l'API des conversations
-const conversationApi = axios.create({
-    baseURL: 'http://localhost:8000/user/conversation',
-});
 
-// Exporter les interfaces
+
+
 export interface Sender {
     id: number;
     username: string;
@@ -33,7 +31,7 @@ export interface Conversation {
 // Fonction pour lire les conversations
 export const readConversations = async (): Promise<Conversations[]> => {
     try {
-        const res: AxiosResponse<Conversations[]> = await conversationApi.get('');
+        const res: AxiosResponse<Conversations[]> = await conversationApi.get('/conversation');
         return res.data;
     } catch (error) {
         console.error('Erreur lors de la récupération des conversations:', error);
@@ -44,7 +42,7 @@ export const readConversations = async (): Promise<Conversations[]> => {
 // Fonction pour lire  conversation + messages
 export const readConversation = async (id:number | undefined): Promise<Conversation[]> => {
     try {
-        const res: AxiosResponse<Conversation[]> = await conversationApi.get(`/${id}`);
+        const res: AxiosResponse<Conversation[]> = await conversationApi.get(`/conversation/${id}`);
         return res.data;
     } catch (error) {
         console.error('Erreur lors de la récupération des conversations:', error);

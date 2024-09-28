@@ -9,23 +9,40 @@ import { ChatInputBtns } from './ChatInputBtns';
 import { Conversation, readConversation } from '../../services/UserConversationServices';
 import { useDiscussion } from '../../hooks/DiscussionContext';
 import { Message, sendMessage } from '../../services/UserMessageServices';
+import { currentUser, UserCurrentData } from '../../services/userServices';
 
 const socket: Socket = io('http://localhost:3000'); 
 
 export const Chat: React.FC = () => {
   const [message, setMessage] = useState<string>(''); 
   const [conversationData, setConversationData] = useState<Conversation[]>([]); 
-
+  const [currentUserData, setUserCurrentData] = useState<UserCurrentData | undefined>(undefined);
+  
   const { activeDiscussion } = useDiscussion();
   const discussionId: number | undefined = activeDiscussion?.id;
-
+  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
-
+  
   const joinRoom = (roomId: number | undefined) => { 
     socket.emit('joinRoom', roomId); 
   };  
+  
+
+useEffect(() => {
+  const fetchUserCurrentData = async () => {
+    try {
+      const currentUserData: UserCurrentData = await currentUser();
+      setUserCurrentData(currentUserData);
+    } catch (error) {
+      console.log("Erreur lors de la récupération des données utilisateur:", error);
+    }
+  };
+
+  fetchUserCurrentData();
+}, []);
+  
 
   useEffect(() => {
 
@@ -62,13 +79,14 @@ export const Chat: React.FC = () => {
     const newMessage: Message = {
       content: message,
       conversationId: activeDiscussion?.id,
-      sender: { id: 1 } 
+      sender: undefined
     }
 
     try {
       
-      await sendMessage(newMessage); 
-      socket.emit('message', { conversationId: activeDiscussion?.id, msg: newMessage }); 
+      const msg = await sendMessage(newMessage); 
+      
+      socket.emit('message', { conversationId: activeDiscussion?.id, msg: msg }); 
       setMessage(''); 
     } catch (error) {
       console.error('Erreur lors de l\'envoi du message:', error);
@@ -97,10 +115,11 @@ export const Chat: React.FC = () => {
         <div className="h-full overflow-hidden py-4">
           <div className="h-full overflow-y-auto">
             <div className="grid grid-cols-12 gap-y-2">
-              {conversationData.map((data) => (
+              {conversationData.map((data, index) => (
                 <ChatMessage
-                  key={data.id}
-                  currentUserId={2}
+                  key={index}
+                  // utilisateur connecter
+                  currentUserId={currentUserData?.id}
                   senderId={data.sender.id}
                   initial='D'
                   content={data.content}
