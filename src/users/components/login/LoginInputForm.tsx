@@ -14,7 +14,7 @@ export const LoginInputForm: React.FC<LoginInputFormProps> = ({ value, onChange,
             <input
                 type={ type }
                 id={ id }
-                className="bg-gray-200 pl-12 py-2 md:py-4 focus:outline-none w-full"
+                className="bg-gray-200 pl-12 py-2 md:py-4 focus:outline-none w-full rounded-lg"
                 placeholder={ placeholder }
                 onChange={ onChange }
                 value={ value }

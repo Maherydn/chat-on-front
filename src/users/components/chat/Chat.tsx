@@ -10,10 +10,14 @@ import { Conversation, readConversation } from '../../services/UserConversationS
 import { useDiscussion } from '../../hooks/DiscussionContext';
 import { Message, sendMessage } from '../../services/UserMessageServices';
 import { currentUser, UserCurrentData } from '../../services/userServices';
+import { useConnectedUsersContext } from '../../hooks/ConnectedUsersContext';
 
-const socket: Socket = io('http://localhost:3000'); 
+const socket: Socket = io('http://localhost:3000');
 
 export const Chat: React.FC = () => {
+
+  const { connectedUsers } = useConnectedUsersContext();
+
   const [message, setMessage] = useState<string>(''); 
   const [conversationData, setConversationData] = useState<Conversation[]>([]); 
   const [currentUserData, setUserCurrentData] = useState<UserCurrentData | undefined>(undefined);
@@ -55,15 +59,11 @@ useEffect(() => {
           console.error('Erreur lors de la mise à jour des conversations:', error);
         }
       };
-
+      
       fetchConversations();
     }
-  }, [discussionId]); 
 
-  useEffect(() => {
     joinRoom(discussionId);
-
-
     socket.on('message', (msg: Message) => {
       if (msg) {
         setConversationData((prevMessages) => [...prevMessages, msg as unknown as Conversation]); 
@@ -73,7 +73,7 @@ useEffect(() => {
     return () => {
       socket.off('message'); 
     };
-  }, [discussionId]); 
+  }, [discussionId]);  
 
   const handleSendMessage = async () => {
     const newMessage: Message = {
@@ -93,11 +93,14 @@ useEffect(() => {
     }
   };
 
-  
+  const isConnected = (username: string): boolean => {
+    return connectedUsers?.some(connectUser => connectUser.username === username) || false;
+  };  
 
+   
   return (
     <>
-      <div className="flex flex-col h-full w-full bg-white px-4 py-6">
+      <div className="flex flex-col h-full w-full  px-4 py-6 bg-white">
         {!activeDiscussion ? (
           <div className='flex justify-center items-center '>
             <img src='dazai.jpg' className='rounded-lg hover:scale-105 duration-300' />
@@ -107,13 +110,13 @@ useEffect(() => {
             <ChatTitle 
               initial='U'
               title={activeDiscussion?.title}
-              status='active'
+              status={isConnected(activeDiscussion?.title) && 'active'}
             />
             <ChatHeaderItems />
           </div>
         )}
-        <div className="h-full overflow-hidden py-4">
-          <div className="h-full overflow-y-auto">
+        <div className="h-full overflow-hidden py-4 ">
+          <div className="h-full overflow-y-auto ">
             <div className="grid grid-cols-12 gap-y-2">
               {conversationData.map((data, index) => (
                 <ChatMessage

@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react'
 import { LoginInputForm } from './LoginInputForm'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { login } from '../../services/UserLoginServices'
 import { jwtDecode } from 'jwt-decode'
 
@@ -9,7 +9,7 @@ export const LoginForm:React.FC = () => {
     const [ username, setUsername ] = useState<string>('')
     const [ password, setPassword ] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false);
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -33,7 +33,7 @@ export const LoginForm:React.FC = () => {
           console.log(decodedToken);
           
 
-          //  navigate('/home')
+           navigate('/home')
           
       } catch (error) {
           console.error(error);
@@ -68,7 +68,7 @@ export const LoginForm:React.FC = () => {
             value={password}
         />
     </div>
-    <button className="bg-gradient-to-b from-gray-700 to-gray-900 font-medium p-2 md:p-4 text-white uppercase w-full">{loading ? 'Connexion en cours...' : 'Se connecter'}</button>
+    <button className="bg-gradient-to-b from-blue-700 to-blue-900 font-medium p-2 md:p-4 text-white uppercase w-full rounded-lg hover:scale-105 duration-300 ">{loading ? 'Connexion en cours...' : 'Se connecter'}</button>
   </form>
   )
 }

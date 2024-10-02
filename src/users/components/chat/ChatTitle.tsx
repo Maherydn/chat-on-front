@@ -3,7 +3,7 @@ import React from 'react'
 interface ChatTitleProps {
     initial: string;
     title: string | undefined;
-    status: string
+    status: string | boolean
 }
 
 export const ChatTitle:React.FC<ChatTitleProps> = ( { initial, title, status} ) => {
@@ -16,7 +16,7 @@ export const ChatTitle:React.FC<ChatTitleProps> = ( { initial, title, status} ) 
         <div className="font-semibold text-sm">
             { title }
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-green-600">
             { status }
         </div> 
         </div>

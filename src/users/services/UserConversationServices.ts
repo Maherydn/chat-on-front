@@ -1,9 +1,6 @@
 import { AxiosResponse } from "axios";
 import { conversationApi } from "./authServices";
 
-
-
-
 export interface Sender {
     id: number;
     username: string;
@@ -49,3 +46,5 @@ export const readConversation = async (id:number | undefined): Promise<Conversat
         throw error;
     }
 };
+
+

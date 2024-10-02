@@ -3,15 +3,18 @@
 // import viteLogo from '/vite.svg'
 // import './App.css'
 import AppRoutes from './users/components/routes/Routes'
+import { ConnectedUsersProvider } from './users/hooks/ConnectedUsersContext'
 import { DiscussionProvider } from './users/hooks/DiscussionContext'
 
 function App() {
 
   return (
     <>
+    <ConnectedUsersProvider>
       <DiscussionProvider>
         <AppRoutes/>
       </DiscussionProvider>
+      </ConnectedUsersProvider>
     </>
   )
 }
